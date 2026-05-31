@@ -12,6 +12,17 @@
       <p class="text-gray-500">Dane pobierane z API Supabase</p>
     </header>
 
+    <div class="w-full max-w-3xl flex justify-end mb-4">
+      <div class="flex items-center gap-2">
+        <label for="sort-select" class="font-medium text-gray-700">Sortuj:</label>
+        <select id="sort-select" class="border border-gray-300 p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer">
+          <option value="date-desc">Po dacie malejąco</option>
+          <option value="date-asc">Po dacie rosnąco</option>
+          <option value="title-asc">Po nazwie alfabetycznie</option>
+        </select>
+      </div>
+    </div>
+
     <main id="articles-container" class="w-full max-w-3xl flex flex-col gap-6 mb-12">
       <p class="text-center text-gray-500" id="loading-text">Ładowanie artykułów...</p>
     </main>
@@ -40,7 +51,13 @@
           <textarea id="content" rows="4" required class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
         </div>
 
-        <button type="submit" class="bg-blue-600 text-white font-bold p-3 rounded hover:bg-blue-700 transition mt-2">
+        <div>
+          <label for="created_at" class="block font-medium mb-1">Data utworzenia (opcjonalnie)</label>
+          <input type="date" id="created_at" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-500" />
+          <p class="text-xs text-gray-400 mt-1">Jeśli pozostawisz puste, ustawi się automatycznie dzisiejsza data i godzina.</p>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white font-bold p-3 rounded hover:bg-blue-700 transition mt-2 cursor-pointer">
           Opublikuj artykuł
         </button>
       </form>

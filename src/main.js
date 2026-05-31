@@ -1,21 +1,33 @@
 import './style.css';
 import { createClient } from '@supabase/supabase-js';
+import dayjs from 'dayjs'; 
 
 const supabaseUrl = 'https://xamnhobtxyhyzbwtkrtx.supabase.co';
 const supabaseKey = 'sb_publishable_dEaxtk1NaGfRPZE6VntWVQ_Bwkw4T9o';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// 2. Pobieranie elementów z DOM
 const articlesContainer = document.querySelector('#articles-container');
 const loadingText = document.querySelector('#loading-text');
 const form = document.querySelector('#add-article-form');
+const sortSelect = document.querySelector('#sort-select');
 
-// 3. Funkcja pobierająca i wyświetlająca artykuły
+// 3. Funkcja pobierająca i sortująca artykuły
 async function fetchArticles() {
-  // Odpytujemy tabelę o nazwie 'articles'
-  const { data: articles, error } = await supabase
-    .from('articles')
-    .select('*')
-    .order('created_at', { ascending: false }); // Najnowsze na górze
+  const sortValue = sortSelect.value;
+  
+  let query = supabase.from('articles').select('*');
+
+  // Zadanie Dodatkowe: sortowanie
+  if (sortValue === 'date-desc') {
+    query = query.order('created_at', { ascending: false });
+  } else if (sortValue === 'date-asc') {
+    query = query.order('created_at', { ascending: true });
+  } else if (sortValue === 'title-asc') {
+    query = query.order('title', { ascending: true });
+  }
+
+  const { data: articles, error } = await query;
 
   if (error) {
     console.error('Błąd pobierania:', error);
@@ -23,7 +35,6 @@ async function fetchArticles() {
     return;
   }
 
-  // Wyczyść kontener przed wstawieniem danych
   articlesContainer.innerHTML = '';
 
   if (articles.length === 0) {
@@ -31,12 +42,9 @@ async function fetchArticles() {
     return;
   }
 
-  // Generowanie kodu HTML dla każdego artykułu
   articles.forEach((article) => {
-    // Formatowanie daty do czytelnej postaci
-    const date = new Date(article.created_at).toLocaleDateString('pl-PL', {
-      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
-    });
+    // Zadanie Dodatkowe: "DD-MM-YYYY" 
+    const formattedDate = dayjs(article.created_at).format('DD-MM-YYYY');
 
     const articleElement = document.createElement('article');
     articleElement.className = 'bg-white p-6 rounded-lg shadow-sm border border-gray-200';
@@ -46,7 +54,7 @@ async function fetchArticles() {
       <h4 class="text-lg font-medium text-gray-600 mb-2">${article.subtitle}</h4>
       <div class="text-sm text-gray-400 mb-4 flex justify-between">
         <span>Autor: <span class="font-semibold text-gray-700">${article.author}</span></span>
-        <span>${date}</span>
+        <span>${formattedDate}</span>
       </div>
       <p class="text-gray-700 leading-relaxed">${article.content}</p>
     `;
@@ -55,19 +63,31 @@ async function fetchArticles() {
   });
 }
 
+// Zadanie Dodatkowe: 
+sortSelect.addEventListener('change', fetchArticles);
+
 // 4. Funkcja obsługująca wysyłanie formularza
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Pobranie danych z inputów
+  const titleValue = document.querySelector('#title').value;
+  const subtitleValue = document.querySelector('#subtitle').value;
+  const authorValue = document.querySelector('#author').value;
+  const contentValue = document.querySelector('#content').value;
+  const createdAtValue = document.querySelector('#created_at').value;
+
   const newArticle = {
-    title: document.querySelector('#title').value,
-    subtitle: document.querySelector('#subtitle').value,
-    author: document.querySelector('#author').value,
-    content: document.querySelector('#content').value,
+    title: titleValue,
+    subtitle: subtitleValue,
+    author: authorValue,
+    content: contentValue,
   };
 
-  // Wysyłanie do Supabase (Insert)
+  // Zadanie Dodatkowe: 
+  if (createdAtValue) {
+    newArticle.created_at = createdAtValue;
+  }
+
   const { error } = await supabase
     .from('articles')
     .insert([newArticle]);
@@ -76,11 +96,9 @@ form.addEventListener('submit', async (e) => {
     console.error('Błąd dodawania artykułu:', error);
     alert('Wystąpił błąd podczas dodawania artykułu.');
   } else {
-    // Sukces!
-    form.reset(); // Czyszczenie formularza
-    fetchArticles(); // Odświeżenie listy z nowym artykułem
+    form.reset();
+    fetchArticles(); 
   }
 });
 
-// Wywołanie pobierania zaraz po załadowaniu skryptu
 fetchArticles();
