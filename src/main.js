@@ -6,19 +6,19 @@ const supabaseUrl = 'https://xamnhobtxyhyzbwtkrtx.supabase.co';
 const supabaseKey = 'sb_publishable_dEaxtk1NaGfRPZE6VntWVQ_Bwkw4T9o';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 2. Pobieranie elementów z DOM
+
 const articlesContainer = document.querySelector('#articles-container');
 const loadingText = document.querySelector('#loading-text');
 const form = document.querySelector('#add-article-form');
 const sortSelect = document.querySelector('#sort-select');
 
-// 3. Funkcja pobierająca i sortująca artykuły
+
 async function fetchArticles() {
   const sortValue = sortSelect.value;
   
   let query = supabase.from('articles').select('*');
 
-  // Zadanie Dodatkowe: sortowanie
+
   if (sortValue === 'date-desc') {
     query = query.order('created_at', { ascending: false });
   } else if (sortValue === 'date-asc') {
@@ -43,7 +43,7 @@ async function fetchArticles() {
   }
 
   articles.forEach((article) => {
-    // Zadanie Dodatkowe: "DD-MM-YYYY" 
+  
     const formattedDate = dayjs(article.created_at).format('DD-MM-YYYY');
 
     const articleElement = document.createElement('article');
@@ -63,10 +63,10 @@ async function fetchArticles() {
   });
 }
 
-// Zadanie Dodatkowe: 
+
 sortSelect.addEventListener('change', fetchArticles);
 
-// 4. Funkcja obsługująca wysyłanie formularza
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -83,7 +83,7 @@ form.addEventListener('submit', async (e) => {
     content: contentValue,
   };
 
-  // Zadanie Dodatkowe: 
+
   if (createdAtValue) {
     newArticle.created_at = createdAtValue;
   }
