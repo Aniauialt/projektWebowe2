@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Supabase</title>
+  </head>
+  <body class="bg-gray-100 font-sans text-gray-800 p-8 min-h-screen flex flex-col items-center">
+    
+    <header class="mb-10 text-center">
+      <h1 class="text-4xl font-bold text-blue-600 mb-2">Moje Artykuły</h1>
+      <p class="text-gray-500">Dane pobierane z API Supabase</p>
+    </header>
+
+    <main id="articles-container" class="w-full max-w-3xl flex flex-col gap-6 mb-12">
+      <p class="text-center text-gray-500" id="loading-text">Ładowanie artykułów...</p>
+    </main>
+
+    <section class="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <h2 class="text-2xl font-bold mb-4">Dodaj nowy artykuł</h2>
+      
+      <form id="add-article-form" class="flex flex-col gap-4">
+        <div>
+          <label for="title" class="block font-medium mb-1">Tytuł</label>
+          <input type="text" id="title" required class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div>
+
+        <div>
+          <label for="subtitle" class="block font-medium mb-1">Podtytuł</label>
+          <input type="text" id="subtitle" required class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div>
+
+        <div>
+          <label for="author" class="block font-medium mb-1">Autor</label>
+          <input type="text" id="author" required class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div>
+
+        <div>
+          <label for="content" class="block font-medium mb-1">Treść</label>
+          <textarea id="content" rows="4" required class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white font-bold p-3 rounded hover:bg-blue-700 transition mt-2">
+          Opublikuj artykuł
+        </button>
+      </form>
+    </section>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
